@@ -27,3 +27,17 @@ class ArduinoRegisterView(APIView):
             user, created = User.objects.get_or_create(username=login)
             device = ArduinoDevice.objects.create(owner=user, login=login, password=password)
             return Response({'status': 'success', 'message': 'Arduino зарегистрирована'})
+
+
+class ArduinoProfileUpdateView(APIView):
+    def post(self, request, login):
+        try:
+            device = ArduinoDevice.objects.get(login=login)
+        except ArduinoDevice.DoesNotExist:
+            return Response({"error": "Device not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = ArduinoDeviceSerializer(device, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Данные обновлены"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

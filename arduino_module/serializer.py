@@ -4,4 +4,4 @@ from .models import ArduinoDevice
 class ArduinoDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArduinoDevice
-        fields = ['login', 'password']
+        fields = ['login', 'password', ' full_name', 'phone', 'address', 'registered_at']
